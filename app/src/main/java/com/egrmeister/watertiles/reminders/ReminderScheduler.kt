@@ -24,7 +24,7 @@ import com.egrmeister.watertiles.domain.reminders.ReminderSettings
  */
 class ReminderScheduler(private val context: Context, private val time: TimeProvider) {
 
-    private val alarms: AlarmManager = context.getSystemService(AlarmManager::class.java)
+    private val alarms: AlarmManager = requireNotNull(context.getSystemService(AlarmManager::class.java))
 
     fun reschedule(settings: ReminderSettings) {
         cancelAlarm()
@@ -66,7 +66,7 @@ class ReminderScheduler(private val context: Context, private val time: TimeProv
         const val EXTRA_OPEN_TODAY = "open_today"
 
         fun ensureChannel(context: Context) {
-            val nm = context.getSystemService(NotificationManager::class.java)
+            val nm = requireNotNull(context.getSystemService(NotificationManager::class.java))
             if (nm.getNotificationChannel(CHANNEL_ID) == null) {
                 val channel = NotificationChannel(
                     CHANNEL_ID,
@@ -87,7 +87,7 @@ class ReminderScheduler(private val context: Context, private val time: TimeProv
             if (!hasPostPermission(context)) return false
             val nmc = NotificationManagerCompat.from(context)
             if (!nmc.areNotificationsEnabled()) return false
-            val channel = context.getSystemService(NotificationManager::class.java).getNotificationChannel(CHANNEL_ID)
+            val channel = context.getSystemService(NotificationManager::class.java)?.getNotificationChannel(CHANNEL_ID)
             return channel == null || channel.importance != NotificationManager.IMPORTANCE_NONE
         }
 
